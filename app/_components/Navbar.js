@@ -42,7 +42,7 @@ const Navbar = () => {
         <div className="sm:flex sm:gap-4">
           <a
             className="block rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
-            href="/files"
+            href="/upload"
           >
             Get Started
           </a>
