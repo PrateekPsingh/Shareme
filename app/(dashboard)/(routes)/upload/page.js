@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import UploadForm from './_components/UploadForm';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { app } from '../../../../firebaseConfig';
+import { app } from '../../../../firebaseConfig.js';
 import axios from 'axios';
 
 function Upload() {
