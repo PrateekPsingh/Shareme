@@ -1,17 +1,16 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import UploadForm from './_components/UploadForm';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../../../../firebaseConfig';
-import CompleteCheck from './_components/CompleteCheck';
-import { getFirestore } from 'firebase/firestore';
+import axios from 'axios';
 
 function Upload() {
   const storage = getStorage(app);
-  const db = getFirestore(app);
   const [progress, setProgress] = useState(0);
   const [uploadCompleted, setUploadCompleted] = useState(false);
   const [downloadURL, setDownloadURL] = useState('');
+  const [shortenedURL, setShortenedURL] = useState('');
 
   const uploadFile = (file) => {
     const metadata = {
@@ -24,7 +23,6 @@ function Upload() {
     uploadTask.on(
       'state_changed',
       (snapshot) => {
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log('Upload is ' + progress + '% done');
         setProgress(progress);
@@ -33,6 +31,7 @@ function Upload() {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             console.log('File available at', downloadURL);
             setDownloadURL(downloadURL);
+            shortenURL(downloadURL);
             setUploadCompleted(true);
           });
         }
@@ -41,6 +40,15 @@ function Upload() {
         console.error('Upload failed', error);
       }
     );
+  };
+
+  const shortenURL = async (longURL) => {
+    try {
+      const response = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longURL)}`);
+      setShortenedURL(response.data);
+    } catch (error) {
+      console.error('Error shortening URL', error);
+    }
   };
 
   return (
@@ -53,18 +61,18 @@ function Upload() {
           <UploadForm uploadBtnClick={(file) => uploadFile(file)} progress={progress} />
         </div>
       ) : (
-        <div className='mt-5 p-4 border border-blue-300 bg-grey-50 rounded'>
+        <div className='mt-5 p-4 border border-green-300 bg-green-50 rounded'>
           <h2 className='text-[18px] font-bold text-green-700'>Upload Successful!</h2>
-          <p className='mt-2 text-primary-600'>
+          <p className='mt-2 text-green-600'>
             Your file has been uploaded successfully. You can download it using the link below:
           </p>
           <a
-            href={downloadURL}
+            href={shortenedURL || downloadURL}
             target='_blank'
             rel='noopener noreferrer'
             className='block mt-2 text-blue-600 underline'
           >
-            {downloadURL}
+            {shortenedURL || downloadURL}
           </a>
           <p className='mt-2 text-gray-700'>Copy the link to share the file.</p>
         </div>
