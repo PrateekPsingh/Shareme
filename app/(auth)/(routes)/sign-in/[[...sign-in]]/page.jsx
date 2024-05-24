@@ -31,7 +31,7 @@ export default function Page() {
         </h2>
 
         <p className="mt-4 leading-relaxed text-white/90">
-          Want to share your files instantly we got youn covered.
+          Want to share your files instantly we got you covered.
         </p>
       </div>
     </section>
@@ -54,7 +54,7 @@ export default function Page() {
           </h1>
 
           <p className="mt-4 leading-relaxed text-gray-500">
-          Want to share your files instantly we got youn covered.
+          Want to share your files instantly we got you covered.
           </p>
         </div>
         
